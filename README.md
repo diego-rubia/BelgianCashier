@@ -1,5 +1,5 @@
 
-**BelgianPOS**
+**BelgianCashier**
 ==========
 
 a point of sale system for Belgian Waffle and Co. located in
