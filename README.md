@@ -1,5 +1,5 @@
-
-**BelgianCashier**
+[alt text](https://github.com/diego-rubia/BelgianCashier/logo_100x100.png)
+**BelgianCashierApp**
 ==========
 
 a point of sale system for Belgian Waffle and Co. located in
