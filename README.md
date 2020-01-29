@@ -1,4 +1,4 @@
-[alt text](https://github.com/diego-rubia/BelgianCashier/blob/master/logo_100x100.png)
+![alt text](https://github.com/diego-rubia/BelgianCashier/blob/master/logo_100x100.png)
 **BelgianCashierApp**
 ==========
 
