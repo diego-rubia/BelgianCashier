@@ -385,15 +385,16 @@ public class OrderForm extends javax.swing.JFrame {
                 int coffeeIndex =  coffeeTypeCombo.getSelectedIndex();
                 mbw.addOrder(waffleIndex, coffeeIndex, waffleqty, coffeeqty);
                 String a= "";
+                if(waffleqty>0){
+                    a = a+waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName()+"\n"
+                }
                 if(coffeeqty>0){
-                    a = waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName()+"\n"+
-                        coffeeqty+"pcs. Coffee: "+mCoffeeList.get(coffeeIndex).getmProductName();
-                }else{
-                    a = waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName();
+                    a =a+coffeeqty+"pcs. Coffee: "+mCoffeeList.get(coffeeIndex).getmProductName();
                 }
                 JOptionPane.showMessageDialog(null, a);
                 
                 updateListBox();
+                resetQuantityBox();
             }else{
                 JOptionPane.showMessageDialog(null, "Must Enter valid Quantity of Waffle or Coffee");
             }

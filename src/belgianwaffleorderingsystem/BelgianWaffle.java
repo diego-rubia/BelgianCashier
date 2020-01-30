@@ -70,14 +70,22 @@ public class BelgianWaffle extends Exception {
                                         int waffleQuantity,
                                         int coffeeQuantity) throws belgianwaffleorderingsystem.OrderException
   {
-     if(mOrders.indexOf(mWaffle.get(waffleIndex))==-1){
-         mOrders.add(new Order(mWaffle.get(waffleIndex),waffleQuantity));
-         if(coffeeQuantity>0){
-            mOrders.add(new Order(mCoffee.get(coffeeIndex),coffeeQuantity));
+         if(waffleQuantity>0){
+            if(mOrders.indexOf(mWaffle.get(waffleIndex).getmProductName())==-1){
+                mOrders.add(new Order(mWaffle.get(waffleIndex),waffleQuantity));
+            }else{
+                throw new OrderException("Duplicate Order "+mWaffle.get(waffleIndex));
+            }
          }
-     }else{
-         throw new OrderException("Duplicate Order, delete order first");
-     }
+         if(coffeeQuantity>0){
+            if(mOrders.indexOf(mCoffee.get(coffeeIndex).getmProductName())==-1){
+                mOrders.add(new Order(mCoffee.get(coffeeIndex),coffeeQuantity));
+            }
+            else{
+                throw new OrderException("Duplicate Order "+mCoffee.get(coffeeIndex));
+            }
+         }
+    
      
       
     
