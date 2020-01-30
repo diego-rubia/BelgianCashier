@@ -521,7 +521,9 @@ public class OrderForm extends javax.swing.JFrame {
         int reply = JOptionPane.showConfirmDialog(null, "Are you sure to remove selected item?", "Void Prompt", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
           mbw.removeOrder(orderListbox.getSelectedIndex());
+          mbw.updateTotalPrice();
           updateListBox();
+          totalTxt.SetText(mbw.getTotalPrice()+".00");
         }
         
         
