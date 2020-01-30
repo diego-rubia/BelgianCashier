@@ -378,7 +378,7 @@ public class OrderForm extends javax.swing.JFrame {
        
         int waffleqty = Integer.parseInt(waffleQuantityTxt.getText());
         int coffeeqty = Integer.parseInt(coffeeQuantityTxt.getText());
-        
+        try{
             if(waffleqty !=0 || coffeeqty !=0){
                 int waffleIndex = waffleTypeCombo.getSelectedIndex();
 
@@ -397,7 +397,9 @@ public class OrderForm extends javax.swing.JFrame {
             }else{
                 JOptionPane.showMessageDialog(null, "Must Enter valid Quantity of Waffle or Coffee");
             }
-        
+        }catch(OrderException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
     }//GEN-LAST:event_addOrderBtnActionPerformed
 
     private void updateListBox(){

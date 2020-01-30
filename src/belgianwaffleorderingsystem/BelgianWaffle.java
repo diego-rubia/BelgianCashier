@@ -42,7 +42,7 @@ class Order<E> extends ArrayList<E>{
         return Integer.toString(mqty)+"pcs. "+mp.getmProductName()+"     "+Integer.toString(mtotal)+".00";
     }
 }
-public class BelgianWaffle {
+public class BelgianWaffle extends Exception {
   
   
   private ArrayList<Product>mWaffle;
@@ -65,10 +65,10 @@ public class BelgianWaffle {
   }
 
 
-  public void addOrder ( int waffleIndex,
+  public void addOrder( int waffleIndex,
                                         int coffeeIndex,
                                         int waffleQuantity,
-                                        int coffeeQuantity)
+                                        int coffeeQuantity) throws belgianwaffleorderingsystem.OrderException
   {
      if(mOrders.indexOf(mWaffle.get(waffleIndex))==-1){
          mOrders.add(new Order(mWaffle.get(waffleIndex),waffleQuantity));
@@ -76,7 +76,7 @@ public class BelgianWaffle {
             mOrders.add(new Order(mCoffee.get(coffeeIndex),coffeeQuantity));
          }
      }else{
-         
+         throw new OrderException("Duplicate Order, delete order first");
      }
      
       
