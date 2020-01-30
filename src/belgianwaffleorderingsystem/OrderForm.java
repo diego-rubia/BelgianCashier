@@ -518,7 +518,7 @@ public class OrderForm extends javax.swing.JFrame {
           mbw.removeOrder(orderListbox.getSelectedIndex());
           mbw.updateTotalPrice();
           updateListBox();
-          totalTxt.setText(mbw.getTotalPrice()+".00");
+          totalTxt.SetText(mbw.getTotalPrice()+".00");
         }
         
         
