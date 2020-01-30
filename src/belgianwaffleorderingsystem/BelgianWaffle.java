@@ -96,7 +96,7 @@ public class BelgianWaffle extends Exception {
       mOrders.remove(index);
       
   }
-  private void updateTotalPrice(){
+  public void updateTotalPrice(){
       mTransactionTotal = 0;
       for(int i =0;i<mOrders.size();i++){
           mTransactionTotal+=mOrders.get(i).getTotal();
