@@ -21,6 +21,7 @@ public class OrderForm extends javax.swing.JFrame {
     String menuDbName = "menu.db";
     String dbpath = "./src/db/";
     private ArrayList<Product> mWaffleList;
+    DefaultListModel model;
     private ArrayList<Product> mCoffeeList;
     /**
      * Creates new form OrderForm
@@ -34,8 +35,8 @@ public class OrderForm extends javax.swing.JFrame {
         generateMenu();
         //if done generating menu
         //update orderhandler BelgianWaffle class for the items
-        mbw = new BelgianWaffle(mWaffleList,mCoffeeList);
-        
+        mbw = new BelgianWaffle(mWaffleList,mCoffeeList,mbdb);
+        model = new DefaultListModel();
       
     }
     
@@ -184,11 +185,12 @@ public class OrderForm extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(waffleQuantityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minusWaffleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(plusWaffleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(plusWaffleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(waffleQuantityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(minusWaffleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -251,11 +253,6 @@ public class OrderForm extends javax.swing.JFrame {
         changeTxt.setText("0.00");
 
         orderListbox.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        orderListbox.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane2.setViewportView(orderListbox);
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
@@ -381,25 +378,38 @@ public class OrderForm extends javax.swing.JFrame {
        
         int waffleqty = Integer.parseInt(waffleQuantityTxt.getText());
         int coffeeqty = Integer.parseInt(coffeeQuantityTxt.getText());
-        if(waffleqty !=0 || coffeeqty !=0){
-            int waffleIndex = waffleTypeCombo.getSelectedIndex();
+        
+            if(waffleqty !=0 || coffeeqty !=0){
+                int waffleIndex = waffleTypeCombo.getSelectedIndex();
 
-            int coffeeIndex =  coffeeTypeCombo.getSelectedIndex();
-            String a= "";
-            if(coffeeqty>0){
-                a = waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName()+"\n"+
-                    coffeeqty+"pcs. Coffee: "+mCoffeeList.get(coffeeIndex).getmProductName();
+                int coffeeIndex =  coffeeTypeCombo.getSelectedIndex();
+                mbw.addOrder(waffleIndex, coffeeIndex, waffleqty, coffeeqty);
+                String a= "";
+                if(coffeeqty>0){
+                    a = waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName()+"\n"+
+                        coffeeqty+"pcs. Coffee: "+mCoffeeList.get(coffeeIndex).getmProductName();
+                }else{
+                    a = waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName();
+                }
+                JOptionPane.showMessageDialog(null, a);
+                
+                updateListBox();
             }else{
-                a = waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName();
+                JOptionPane.showMessageDialog(null, "Must Enter valid Quantity of Waffle or Coffee");
             }
-            JOptionPane.showMessageDialog(null, a);
-        }else{
-            JOptionPane.showMessageDialog(null, "Must Enter valid Quantity of Waffle or Coffee");
-        }
         
     }//GEN-LAST:event_addOrderBtnActionPerformed
 
-    
+    private void updateListBox(){
+        model.clear();
+        for(int i =0;i<mbw.getOrders().size();i++){
+            model.addElement(mbw.getOrders().get(i).getStringFormat());
+        }
+        orderListbox.setModel(model);
+        
+        
+        
+    }
     private void waffleQuantityTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleQuantityTxtActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_waffleQuantityTxtActionPerformed
