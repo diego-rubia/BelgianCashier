@@ -66,15 +66,23 @@ public class BelgianWaffle extends Exception {
       
   }
 
-
+  public void setTenderedCash(int cash){
+      mTenderedCash = cash;
+      mChange = mTenderedCash - mTransactionTotal;
+  }
+  public int getChange(){
+      return mChange;
+  }
   public void addOrder( int waffleIndex,
                                         int coffeeIndex,
                                         int waffleQuantity,
                                         int coffeeQuantity) throws belgianwaffleorderingsystem.OrderException
   {
+        
          if(waffleQuantity>0){
             if(mOrders.indexOf(mWaffle.get(waffleIndex).getmProductName())==-1){
                 mOrders.add(new Order(mWaffle.get(waffleIndex),waffleQuantity));
+                
             }else{
                 throw new OrderException("Duplicate Order "+mWaffle.get(waffleIndex));
             }
@@ -94,9 +102,9 @@ public class BelgianWaffle extends Exception {
   }
   public void removeOrder(int index){
       mOrders.remove(index);
-      
+      updateTotalPrice();
   }
-  private void updateTotalPrice(){
+  public void updateTotalPrice(){
       mTransactionTotal = 0;
       for(int i =0;i<mOrders.size();i++){
           mTransactionTotal+=mOrders.get(i).getTotal();
