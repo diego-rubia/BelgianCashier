@@ -18,36 +18,29 @@ public class BelgianWaffle {
   // Array lists for coffee orders
   static ArrayList<String> coffeeOrders = new ArrayList<String> ();
   static ArrayList<Integer> coffeeQuantity = new ArrayList<Integer> ();
+  
+  private ArrayList<Product>mWaffle;
+  private ArrayList<Product>mCoffee;
+  private double mTransactionTotal;
+  public BelgianWaffle(ArrayList<Product>waffle,ArrayList<Product>coffee) {
+      mWaffle = waffle;
+      mCoffee = coffee;
+  }
 
 
-  public static void getOrderFromInput (String inpStringWaff,
-                                        String inpStringCoffee,
-                                        String quantStringWaff,
-                                        String quantStringCoff)
+  public static void addOrder ( int waffleIndex,
+                                        int coffeeIndex,
+                                        int waffleQuantity,
+                                        int coffeeQuantity)
   {
-    String [] waffleBuffer = inpStringWaff.split(",");
-    String [] coffeeBuffer = inpStringCoffee.split(",");
-    String [] waffleNumberBuffer = quantStringWaff.split(",");
-    String [] coffeeNumberBuffer = quantStringCoff.split(",");
     
-    //add waffle orders in waffleBuffer to the ArrayList
-    for (String waffles : waffleBuffer)
-        waffleOrders.add (waffles);
-
-    //add coffee orders in coffeeBuffer to the ArrayList for coffee
-    for (String coffee : coffeeBuffer)
-        coffeeOrders.add (coffee);
+      
     
-    for (String qWaffles : waffleNumberBuffer)
-        waffleQuantity.add(Integer.parseInt(qWaffles)); // convert string to int val
-    
-    for (String qCoffee : coffeeNumberBuffer)
-        coffeeQuantity.add(Integer.parseInt(qCoffee)); // convert string to int val
   }
   
   public static void setWaffleOrder (String waffle)
   {
-      waffleOrders.add (waffle);
+      waffleOrders.add (waffle);o 
   }
  
   public static void setCoffeeOrder (String coffee)
