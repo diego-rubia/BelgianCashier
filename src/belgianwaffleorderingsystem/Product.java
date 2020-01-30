@@ -11,6 +11,10 @@ import java.util.ArrayList;
  *
  * @author Jairus
  */
+
+
+//this class defines a product information e.g price, code,name,type;
+///////////////////////
 public class Product<E> extends ArrayList<E> {
 
    
@@ -18,14 +22,28 @@ public class Product<E> extends ArrayList<E> {
     private int mPrice;
     private String mProductType;
     private String mProductCode;
+    private int mQuantity; // for ordering;
 
+    public int getmQuantity() {
+        return mQuantity;
+    }
+
+    public void setmQuantity(int mQuantity) {
+        this.mQuantity = mQuantity;
+    }
     public Product(String productCode,String productName,int price,String productType) {
         mProductName = productName;
         mProductCode = productCode;
         mPrice = price;
+        mQuantity = 0;
         mProductType = productType;
     }
 
+    @Override
+    public boolean add(E e) {
+        return super.add(e); //To change body of generated methods, choose Tools | Templates.
+    }
+   
     
     
     
