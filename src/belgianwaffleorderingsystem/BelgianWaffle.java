@@ -11,39 +11,7 @@ import java.util.*;
  *
  * @author ddieg
  */
-class Order<E> extends ArrayList<E>{
-    Product mp;
-    int mqty;
-    int mtotal;
-    public Order(Product p,int qty){
-        mp = p;
-        mqty = qty;
-        mtotal = qty * p.getmPrice();
-    }
 
-    public Product getMp() {
-        return mp;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(mp.getmProductName()==((Product)o).getmProductName()){
-            return true;
-        }else{
-            return false;
-        }
-       
-    }
-    public int getTotal(){
-        return mtotal;
-    }
-   
-   
-    
-    public String getStringFormat(){
-        return Integer.toString(mqty)+"pcs. "+mp.getmProductName()+"     "+Integer.toString(mtotal)+".00";
-    }
-}
 public class BelgianWaffle extends Exception {
   
   
@@ -126,6 +94,10 @@ public class BelgianWaffle extends Exception {
       mOrders.clear();
       resetCashInfo();
   }
+  public void updateSales(){
+      mDb.updateSales(mOrders);
+  }
+  
   
   
   

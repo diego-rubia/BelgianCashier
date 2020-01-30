@@ -17,6 +17,7 @@ public class BelgianDatabaseHandler {
     private Connection mDb;
     private ArrayList<Product> mCoffeeMenu;
     private ArrayList<Product> mWaffleMenu;
+    private ArrayList<Order>mOrders;
     public BelgianDatabaseHandler(String dbname) {
         //constructor trys to initialize the connection of mDb and uses it in the entire class to handle 
         //database information and transactions
@@ -24,7 +25,7 @@ public class BelgianDatabaseHandler {
         mDb = null;
         mCoffeeMenu = new ArrayList<Product>();
         mWaffleMenu = new ArrayList<Product>();
-        
+        mOrders = new ArrayList<Order>();
     }
     private Connection connect(){
         try{
@@ -67,5 +68,35 @@ public class BelgianDatabaseHandler {
         }
         return mWaffleMenu;
     }
-    
+    public void updateSales(ArrayList<Order> order){
+        String query = "";
+        
+        for(int i =0;i<order.size();i++){
+            query = "INSERT INTO Inventory (ProductName,Quantity,TotalPrice) "
+                    + "VALUES ('"+order.get(i).getMp().getmProductName()+"',"+order.get(i).getQuantity()+","+order.get(i).getTotal()+")";
+        }
+        
+        try(Connection conn = this.connect();Statement stmt = conn.createStatement()){
+          stmt.executeUpdate(query);
+           if(conn!=null)
+            conn.close();
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage()); 
+        }
+    }
+    public ArrayList<Order> getSales(){
+        String query = "SELECT * FROM Inventory";
+        try(Connection conn = this.connect();Statement stmt = conn.createStatement();ResultSet rs = stmt.executeQuery(query)){
+           while(rs.next()){
+               mOrders.add(new Order(rs.getString("ProductName"),rs.getInt("Quantity"),rs.getInt("TotalPrice")));
+           }
+           if(conn!=null)
+            conn.close();
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage()); 
+        }
+        return mOrders;
+    }
 }

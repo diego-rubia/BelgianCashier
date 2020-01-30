@@ -38,7 +38,12 @@ public class Product<E> extends ArrayList<E> {
         mQuantity = 0;
         mProductType = productType;
     }
-
+    public Product(String productName){
+        mProductName = productName;
+        mProductCode ="";
+        mPrice = 0;
+        mProductType = "";
+    }
     @Override
     public boolean add(E e) {
         return super.add(e); //To change body of generated methods, choose Tools | Templates.
