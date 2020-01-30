@@ -440,7 +440,7 @@ public class OrderForm extends javax.swing.JFrame {
         }
         orderListbox.setModel(model);
         totalTxt.setText(mbw.getTotalPrice()+".00");
-        
+        changeTxt.setText("0.00");
         
     }
     private void waffleQuantityTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleQuantityTxtActionPerformed
@@ -473,7 +473,9 @@ public class OrderForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Code to clear orders
-//        bw.clearOrders(); // empties contents of array list in BelgianWaffle class
+        mbw.clearOrders();
+        updateListBox();
+        
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

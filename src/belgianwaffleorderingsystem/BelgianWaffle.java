@@ -110,6 +110,11 @@ public class BelgianWaffle extends Exception {
           mTransactionTotal+=mOrders.get(i).getTotal();
       }
   }
+  private void resetCashInfo(){
+      mTenderedCash = 0;
+      mChange=0;
+      mTransactionTotal = 0;
+  }
   public ArrayList<Order> getOrders(){
    
       return mOrders;
@@ -117,7 +122,10 @@ public class BelgianWaffle extends Exception {
   public int getTotalPrice(){
       return mTransactionTotal;
   }
-  
+  public void clearOrders(){
+      mOrders.clear();
+      resetCashInfo();
+  }
   
   
   
