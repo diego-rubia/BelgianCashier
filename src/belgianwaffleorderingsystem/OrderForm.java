@@ -17,51 +17,38 @@ public class OrderForm extends javax.swing.JFrame {
 
     // Creates object of the Belgian Waffle Class
     BelgianWaffle bw = new BelgianWaffle ();
-    static ArrayList<String> waffleList;
-    
+    BelgianDatabaseHandler mbdb;
+    String menuDbName = "menu.db";
+    String dbpath = "./src/db/";
+    private ArrayList<Product> mWaffleList;
+    private ArrayList<Product> mCoffeeList;
     /**
      * Creates new form OrderForm
      */
     public OrderForm() {
         initComponents();
-        waffleList = new ArrayList<String> ();
+        mWaffleList = new ArrayList<Product>();
+        mCoffeeList = new ArrayList<Product>();
+        mbdb = new BelgianDatabaseHandler(dbpath+menuDbName);
+        resetQuantityBox();
+        generateMenu();
+    }
+    public void resetQuantityBox(){
         waffleQuantity.setText("0");
         coffeeQuantity.setText("0");
     }
-    
-    public static void generateMenu ()
+    //generates Menu in Both Coffee and Waffle Combobox
+    public void generateMenu () 
     {
-        try
-        {
-            FileInputStream file = new FileInputStream ("Menu.dat");
-            ObjectInputStream inFile = new ObjectInputStream (file);
-            boolean eof = false;
-            
-            while (!eof) // read the menu from the file
-            {
-                try
-                {
-                    waffleList.add((String)inFile.readObject());
-                }
-                
-                catch (EOFException ef)
-                {
-                    eof = true;
-                }
-                
-                catch (Exception ex)
-                {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        }
-        
-        catch (IOException e) // 
-        {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
+       ArrayList<Product> mCoffeeList = mbdb.getCoffeeMenu();
+       for(int i =0;i<mCoffeeList.size();i++){
+        coffeeTypeCombo.addItem(mCoffeeList.get(i).toString());
+       }
+       ArrayList<Product> mWaffleList = mbdb.getWaffleMenu();
+       for(int j =0;j<mWaffleList.size();j++){
+        waffleTypeCombo.addItem(mWaffleList.get(j).toString());
+       }
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,8 +61,8 @@ public class OrderForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        waffleType = new javax.swing.JComboBox<>();
-        coffeeType = new javax.swing.JComboBox<>();
+        waffleTypeCombo = new javax.swing.JComboBox<>();
+        coffeeTypeCombo = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -103,14 +90,11 @@ public class OrderForm extends javax.swing.JFrame {
 
         jLabel3.setText("Coffee Order:");
 
-        waffleType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PLA (Plain) - PHP 35", "CHO (Chocolate) - PHP 40", "CHE (Cheddar Cheese) - PHP 40", "PBU  (Peanut Butter) - PHP 40", "CAR (Caramel) - PHP 40", "STR (Strawberry) - PHP 45", "BLU (Blueberry) - PHP 45", "CUS (Custard) - PHP 45", "MPE (Mango Peach) - PHP 45", "MFB (Maple and French Butter) - PHP 45", "BCH (Banana Chocolate) - PHP 50", "BCR (Banana Caramel) - PHP 50", "BPB (Banana Peanut Butter) - PHP 50", "CCU (Chocolate Custard) - PHP 55", "CCR (Cookies and Cream) - PHP 55", "BBB (Blueberry Banana) - PHP 55", "SBB (Strawberry Banana) - PHP 55", "SBC (Strawberry Custard) - PHP 55", "CHH (Chocolate Hazelnut) - PHP 65", "CHC (Chocolate Creamcheese) - PHP 65", "BBC (Blueberry Banana Custard) - PHP 65", " ", " " }));
-        waffleType.addActionListener(new java.awt.event.ActionListener() {
+        waffleTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                waffleTypeActionPerformed(evt);
+                waffleTypeComboActionPerformed(evt);
             }
         });
-
-        coffeeType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OCF (Original Coffee) - PHP 45", "SCF (Strong Coffee) - PHP 45", "CCF (Chocolate Coffee) - PHP 45" }));
 
         jButton1.setLabel("Clear Orders");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -240,8 +224,8 @@ public class OrderForm extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(coffeeType, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(waffleType, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(coffeeTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(waffleTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(0, 14, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
@@ -256,11 +240,11 @@ public class OrderForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(waffleType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(waffleTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(coffeeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(coffeeTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addGap(7, 7, 7)
@@ -308,7 +292,7 @@ public class OrderForm extends javax.swing.JFrame {
            // get waffle order if quantity is specified and greater than zero
            qWaffle = Integer.parseInt(waffleQuantity.getText().trim());
            bw.setWaffleQuantOrder(qWaffle);
-           String wTemp = waffleType.getSelectedItem().toString();
+           String wTemp = waffleTypeCombo.getSelectedItem().toString();
            String wCharCode = wTemp.substring(0,3);
            bw.setWaffleOrder(wCharCode);
            String wOrderTemp = wCharCode + " = " + Integer.toString(qWaffle);         
@@ -321,7 +305,7 @@ public class OrderForm extends javax.swing.JFrame {
             // get coffee order if quantity is specified and greater than zero
             qCoffee = Integer.parseInt(coffeeQuantity.getText().trim());
             bw.setCoffeeQuantOrder(qCoffee);
-            String cTemp = coffeeType.getSelectedItem().toString();
+            String cTemp = coffeeTypeCombo.getSelectedItem().toString();
             String cCharCode = cTemp.substring(0,3);
             bw.setCoffeeOrder(cCharCode);
             String cOrderTemp = cCharCode + " = " + Integer.toString(qCoffee);
@@ -385,9 +369,9 @@ public class OrderForm extends javax.swing.JFrame {
         prevOrderWindow.append ("\nTotal cost: \t PHP " + totCost);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void waffleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleTypeActionPerformed
+    private void waffleTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleTypeComboActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_waffleTypeActionPerformed
+    }//GEN-LAST:event_waffleTypeComboActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Code to clear orders
@@ -466,7 +450,7 @@ public class OrderForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addOrderBtn;
     private javax.swing.JTextField coffeeQuantity;
-    private javax.swing.JComboBox<String> coffeeType;
+    private javax.swing.JComboBox<String> coffeeTypeCombo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -484,6 +468,6 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JToggleButton plusWaffleBtn;
     private javax.swing.JTextArea prevOrderWindow;
     private javax.swing.JTextField waffleQuantity;
-    private javax.swing.JComboBox<String> waffleType;
+    private javax.swing.JComboBox<String> waffleTypeCombo;
     // End of variables declaration//GEN-END:variables
 }

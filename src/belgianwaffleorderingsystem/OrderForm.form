@@ -90,8 +90,8 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="coffeeType" min="-2" pref="418" max="-2" attributes="0"/>
-                                  <Component id="waffleType" min="-2" pref="418" max="-2" attributes="0"/>
+                                  <Component id="coffeeTypeCombo" min="-2" pref="418" max="-2" attributes="0"/>
+                                  <Component id="waffleTypeCombo" min="-2" pref="418" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -114,12 +114,12 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                  <Component id="waffleType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="waffleTypeCombo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel3" min="-2" pref="24" max="-2" attributes="0"/>
-                  <Component id="coffeeType" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="coffeeTypeCombo" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
@@ -174,53 +174,15 @@
         <Property name="text" type="java.lang.String" value="Coffee Order:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JComboBox" name="waffleType">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="23">
-            <StringItem index="0" value="PLA (Plain) - PHP 35"/>
-            <StringItem index="1" value="CHO (Chocolate) - PHP 40"/>
-            <StringItem index="2" value="CHE (Cheddar Cheese) - PHP 40"/>
-            <StringItem index="3" value="PBU  (Peanut Butter) - PHP 40"/>
-            <StringItem index="4" value="CAR (Caramel) - PHP 40"/>
-            <StringItem index="5" value="STR (Strawberry) - PHP 45"/>
-            <StringItem index="6" value="BLU (Blueberry) - PHP 45"/>
-            <StringItem index="7" value="CUS (Custard) - PHP 45"/>
-            <StringItem index="8" value="MPE (Mango Peach) - PHP 45"/>
-            <StringItem index="9" value="MFB (Maple and French Butter) - PHP 45"/>
-            <StringItem index="10" value="BCH (Banana Chocolate) - PHP 50"/>
-            <StringItem index="11" value="BCR (Banana Caramel) - PHP 50"/>
-            <StringItem index="12" value="BPB (Banana Peanut Butter) - PHP 50"/>
-            <StringItem index="13" value="CCU (Chocolate Custard) - PHP 55"/>
-            <StringItem index="14" value="CCR (Cookies and Cream) - PHP 55"/>
-            <StringItem index="15" value="BBB (Blueberry Banana) - PHP 55"/>
-            <StringItem index="16" value="SBB (Strawberry Banana) - PHP 55"/>
-            <StringItem index="17" value="SBC (Strawberry Custard) - PHP 55"/>
-            <StringItem index="18" value="CHH (Chocolate Hazelnut) - PHP 65"/>
-            <StringItem index="19" value="CHC (Chocolate Creamcheese) - PHP 65"/>
-            <StringItem index="20" value="BBC (Blueberry Banana Custard) - PHP 65"/>
-            <StringItem index="21" value=" "/>
-            <StringItem index="22" value=" "/>
-          </StringArray>
-        </Property>
-      </Properties>
+    <Component class="javax.swing.JComboBox" name="waffleTypeCombo">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="waffleTypeActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="waffleTypeComboActionPerformed"/>
       </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JComboBox" name="coffeeType">
-      <Properties>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="OCF (Original Coffee) - PHP 45"/>
-            <StringItem index="1" value="SCF (Strong Coffee) - PHP 45"/>
-            <StringItem index="2" value="CCF (Chocolate Coffee) - PHP 45"/>
-          </StringArray>
-        </Property>
-      </Properties>
+    <Component class="javax.swing.JComboBox" name="coffeeTypeCombo">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
