@@ -16,51 +16,46 @@ import java.io.*;
 public class OrderForm extends javax.swing.JFrame {
 
     // Creates object of the Belgian Waffle Class
-    BelgianWaffle bw = new BelgianWaffle ();
-    static ArrayList<String> waffleList;
-    
+    BelgianWaffle mbw;
+    BelgianDatabaseHandler mbdb;
+    String menuDbName = "menu.db";
+    String dbpath = "./src/db/";
+    private ArrayList<Product> mWaffleList;
+    DefaultListModel model;
+    private ArrayList<Product> mCoffeeList;
     /**
      * Creates new form OrderForm
      */
     public OrderForm() {
         initComponents();
-        waffleList = new ArrayList<String> ();
-        
+        mWaffleList = new ArrayList<Product>();
+        mCoffeeList = new ArrayList<Product>();
+        mbdb = new BelgianDatabaseHandler(dbpath+menuDbName);
+        resetQuantityBox();
+        generateMenu();
+        //if done generating menu
+        //update orderhandler BelgianWaffle class for the items
+        mbw = new BelgianWaffle(mWaffleList,mCoffeeList,mbdb);
+        model = new DefaultListModel();
+      
     }
     
-    public static void generateMenu ()
-    {
-        try
-        {
-            FileInputStream file = new FileInputStream ("Menu.dat");
-            ObjectInputStream inFile = new ObjectInputStream (file);
-            boolean eof = false;
-            
-            while (!eof) // read the menu from the file
-            {
-                try
-                {
-                    waffleList.add((String)inFile.readObject());
-                }
-                
-                catch (EOFException ef)
-                {
-                    eof = true;
-                }
-                
-                catch (Exception ex)
-                {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        }
-        
-        catch (IOException e) // 
-        {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-        }
+    public void resetQuantityBox(){
+        waffleQuantityTxt.setText("0");
+        coffeeQuantityTxt.setText("0");
     }
-
+    //generates Menu in Both Coffee and Waffle Combobox
+    public void generateMenu () 
+    {
+      mCoffeeList = mbdb.getCoffeeMenu();
+       for(int i =0;i<mCoffeeList.size();i++){
+        coffeeTypeCombo.addItem(mCoffeeList.get(i).toString());
+       }
+       mWaffleList = mbdb.getWaffleMenu();
+       for(int j =0;j<mWaffleList.size();j++){
+        waffleTypeCombo.addItem(mWaffleList.get(j).toString());
+       }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,20 +66,32 @@ public class OrderForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        waffleType = new javax.swing.JComboBox<>();
-        coffeeType = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        prevOrderWindow = new javax.swing.JTextArea();
-        jLabel4 = new javax.swing.JLabel();
+        addOrderBtn = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        plusCoffeeBtn = new javax.swing.JToggleButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        waffleQuantityTxt = new javax.swing.JTextField();
+        coffeeQuantityTxt = new javax.swing.JTextField();
+        plusWaffleBtn = new javax.swing.JToggleButton();
+        minusWaffleBtn = new javax.swing.JToggleButton();
+        minusCoffeeBtn = new javax.swing.JToggleButton();
+        jPanel2 = new javax.swing.JPanel();
+        coffeeTypeCombo = new javax.swing.JComboBox<>();
+        waffleTypeCombo = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        changeTxt = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        orderListbox = new javax.swing.JList<>();
+        jLabel8 = new javax.swing.JLabel();
+        totalTxt = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
-        waffleQuantity = new javax.swing.JTextField();
-        coffeeQuantity = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Belgian Waffle Ordering System");
@@ -92,23 +99,210 @@ public class OrderForm extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Belgian Waffle Ordering System");
 
-        jLabel2.setText("Waffle Order:");
-
-        jLabel3.setText("Coffee Order:");
-
-        waffleType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PLA (Plain) - PHP 35", "CHO (Chocolate) - PHP 40", "CHE (Cheddar Cheese) - PHP 40", "PBU  (Peanut Butter) - PHP 40", "CAR (Caramel) - PHP 40", "STR (Strawberry) - PHP 45", "BLU (Blueberry) - PHP 45", "CUS (Custard) - PHP 45", "MPE (Mango Peach) - PHP 45", "MFB (Maple and French Butter) - PHP 45", "BCH (Banana Chocolate) - PHP 50", "BCR (Banana Caramel) - PHP 50", "BPB (Banana Peanut Butter) - PHP 50", "CCU (Chocolate Custard) - PHP 55", "CCR (Cookies and Cream) - PHP 55", "BBB (Blueberry Banana) - PHP 55", "SBB (Strawberry Banana) - PHP 55", "SBC (Strawberry Custard) - PHP 55", "CHH (Chocolate Hazelnut) - PHP 65", "CHC (Chocolate Creamcheese) - PHP 65", "BBC (Blueberry Banana Custard) - PHP 65", " ", " " }));
-        waffleType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                waffleTypeActionPerformed(evt);
-            }
-        });
-
-        coffeeType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OCF (Original Coffee) - PHP 45", "SCF (Strong Coffee) - PHP 45", "CCF (Chocolate Coffee) - PHP 45" }));
-
         jButton1.setLabel("Clear Orders");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        addOrderBtn.setText("Add Orders");
+        addOrderBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addOrderBtnActionPerformed(evt);
+            }
+        });
+
+        plusCoffeeBtn.setText("+");
+        plusCoffeeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plusCoffeeBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Waffle Quantity:");
+
+        jLabel6.setText("Coffee Quantity:");
+
+        waffleQuantityTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                waffleQuantityTxtActionPerformed(evt);
+            }
+        });
+
+        plusWaffleBtn.setText("+");
+        plusWaffleBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plusWaffleBtnActionPerformed(evt);
+            }
+        });
+
+        minusWaffleBtn.setText("-");
+        minusWaffleBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minusWaffleBtnActionPerformed(evt);
+            }
+        });
+
+        minusCoffeeBtn.setText("-");
+        minusCoffeeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                minusCoffeeBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(26, 26, 26)
+                        .addComponent(minusWaffleBtn))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(minusCoffeeBtn)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(coffeeQuantityTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
+                    .addComponent(waffleQuantityTxt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(plusWaffleBtn)
+                    .addComponent(plusCoffeeBtn))
+                .addGap(154, 154, 154))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(plusWaffleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(waffleQuantityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(minusWaffleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(coffeeQuantityTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minusCoffeeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(plusCoffeeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        coffeeTypeCombo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        waffleTypeCombo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        waffleTypeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                waffleTypeComboActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Waffle Order:");
+
+        jLabel3.setText("Coffee Order:");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 746, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(waffleTypeCombo, 0, 618, Short.MAX_VALUE)
+                        .addComponent(coffeeTypeCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap()))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(waffleTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(coffeeTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel7.setText("Change");
+
+        changeTxt.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        changeTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        changeTxt.setText("0.00");
+
+        orderListbox.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jScrollPane2.setViewportView(orderListbox);
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel8.setText("Total");
+
+        totalTxt.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
+        totalTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        totalTxt.setText("0.00");
+        totalTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                totalTxtActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(81, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7)
+                            .addComponent(totalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(54, 54, 54))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(62, 62, 62))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(changeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(54, 54, 54))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(totalTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addGap(11, 11, 11)
+                .addComponent(changeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jButton3.setText("Void Selected");
+        jButton3.setVerifyInputWhenFocusTarget(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -120,26 +314,11 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
-        prevOrderWindow.setColumns(20);
-        prevOrderWindow.setRows(5);
-        jScrollPane1.setViewportView(prevOrderWindow);
-
-        jLabel4.setText("Order Preview Window");
-
-        jLabel5.setText("Waffle Quantity:");
-
-        jLabel6.setText("Coffee Quantity:");
-
-        jButton3.setText("Add Orders");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButton4.setText("Sales Report");
+        jButton4.setActionCommand("");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        waffleQuantity.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                waffleQuantityActionPerformed(evt);
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -148,192 +327,191 @@ public class OrderForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(addOrderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel6)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(19, 19, 19)
-                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(252, 252, 252)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jScrollPane1)
-                                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(31, 31, 31)
-                                                .addComponent(waffleType, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGap(31, 31, 31)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(waffleQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(coffeeType, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(coffeeQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
-                .addGap(153, 153, 153))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(741, 741, 741))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE))
+                .addGap(797, 797, 797))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(waffleType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(coffeeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(waffleQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(coffeeQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4))
+                        .addGap(84, 84, 84)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addOrderBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void addOrderBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOrderBtnActionPerformed
         // Method for Add Orders button
-        int qWaffle, qCoffee;
-        // get the values for the quantities
-        if (coffeeQuantity.getText().isEmpty() && waffleQuantity.getText().isEmpty())
-        {
-            /* gives error message when both waffle quantity and coffee quantity
-               are empty*/
-            JOptionPane.showMessageDialog(null, "Please supply the quantity of coffee and/or waffles");
-        }
-        
-        if (!waffleQuantity.getText().isEmpty() && 
-            Integer.parseInt(waffleQuantity.getText().trim()) > 0)
-        {
-           // get waffle order if quantity is specified and greater than zero
-           qWaffle = Integer.parseInt(waffleQuantity.getText().trim());
-           bw.setWaffleQuantOrder(qWaffle);
-           String wTemp = waffleType.getSelectedItem().toString();
-           String wCharCode = wTemp.substring(0,3);
-           bw.setWaffleOrder(wCharCode);
-           String wOrderTemp = wCharCode + " = " + Integer.toString(qWaffle);         
-        }
-        
-        
-        if (!coffeeQuantity.getText().isEmpty() &&
-            Integer.parseInt(coffeeQuantity.getText().trim()) > 0)
-        {
-            // get coffee order if quantity is specified and greater than zero
-            qCoffee = Integer.parseInt(coffeeQuantity.getText().trim());
-            bw.setCoffeeQuantOrder(qCoffee);
-            String cTemp = coffeeType.getSelectedItem().toString();
-            String cCharCode = cTemp.substring(0,3);
-            bw.setCoffeeOrder(cCharCode);
-            String cOrderTemp = cCharCode + " = " + Integer.toString(qCoffee);
-        }
-        
-        // Order notification
-        if (!coffeeQuantity.getText().isEmpty() || !waffleQuantity.getText().isEmpty())
-        {
-            JOptionPane.showMessageDialog(null, "Orders added");
-        }  
-    }//GEN-LAST:event_jButton3ActionPerformed
+       
+        int waffleqty = Integer.parseInt(waffleQuantityTxt.getText());
+        int coffeeqty = Integer.parseInt(coffeeQuantityTxt.getText());
+        try{
+            if(waffleqty !=0 || coffeeqty !=0){
+                int waffleIndex = waffleTypeCombo.getSelectedIndex();
 
+                int coffeeIndex =  coffeeTypeCombo.getSelectedIndex();
+                mbw.addOrder(waffleIndex, coffeeIndex, waffleqty, coffeeqty);
+                String a= "";
+                if(waffleqty>0){
+                    a = a+waffleqty+"pcs. Waffle: "+mWaffleList.get(waffleIndex).getmProductName()+"\n";
+                }
+                if(coffeeqty>0){
+                    a =a+coffeeqty+"pcs. Coffee: "+mCoffeeList.get(coffeeIndex).getmProductName();
+                }
+                JOptionPane.showMessageDialog(null, a);
+                updateListBox();
+                resetQuantityBox();
+            }else{
+                JOptionPane.showMessageDialog(null, "Must Enter valid Quantity of Waffle or Coffee");
+            }
+        }catch(OrderException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_addOrderBtnActionPerformed
     
-    private void waffleQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleQuantityActionPerformed
+    private void updateListBox(){
+        model.clear();
+        for(int i =0;i<mbw.getOrders().size();i++){
+            model.addElement(mbw.getOrders().get(i).getStringFormat());
+        }
+        orderListbox.setModel(model);
+        totalTxt.setText(mbw.getTotalPrice()+".00");
+        changeTxt.setText("0.00");
+        
+    }
+    private void waffleQuantityTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleQuantityTxtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_waffleQuantityActionPerformed
+    }//GEN-LAST:event_waffleQuantityTxtActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // Code for finalize orders here
-        String wTemp = bw.getWaffleOrders();
-        String [] finWaffle = wTemp.split(",");
-        String wTempNum = bw.getWaffleQuant();
-        String [] wQuantity = wTempNum.split(",");
-        prevOrderWindow.append("Waffle:\n");
         
-        if (finWaffle.length != 0)
-        {
-            for (int i = 0; i < finWaffle.length; i++)
-            {
-                int orderPriceWaff = Integer.parseInt(wQuantity[i])*bw.getPrice(finWaffle[i]);
-                prevOrderWindow.append(finWaffle[i] + "\tPHP " + orderPriceWaff + "\n"); 
-            }            
-        }
-        
-        else // no waffle orders
-        {
-            prevOrderWindow.append("Empty\n");
-        }
-        
-        String cTemp = bw.getCoffeeOrders();
-        String [] finCoffee = cTemp.split(",");
-        String cTempNum = bw.getCoffeeQuant();
-        String [] cQuantity = cTempNum.split(",");
-        prevOrderWindow.append("\nCoffee:\n");
-        if (finCoffee.length != 0)
-        {
-            for (int j = 0; j < finCoffee.length; j++)
-            {
-                int orderPriceCoff = Integer.parseInt(cQuantity[j])*bw.getPrice(finCoffee[j]);
-                prevOrderWindow.append(finCoffee[j] + "\t PHP"  + orderPriceCoff + "\n"); 
+        int amount = 0;
+        while(true){
+            try{
+                amount = Integer.parseInt(JOptionPane.showInputDialog(null,null,"Enter Amount of Cash"));
+                if((amount<0) || (amount< mbw.getTotalPrice())){
+                    throw new Exception("Enter Right Cash Amount");
+                }
+                break;
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, e.getMessage());
             }
+            
         }
+        mbw.setTenderedCash(amount);
+        changeTxt.setText(Integer.toString(mbw.getChange())+".00");
+        mbw.updateSales();
         
-        else // no coffee orders
-        {
-            prevOrderWindow.append("Empty\n");
-        }
         
-        // compute total cost
-        int totCost = bw.getTotalPrice();
-        prevOrderWindow.append ("\nTotal cost: \t PHP " + totCost);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void waffleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleTypeActionPerformed
+    private void waffleTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_waffleTypeComboActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_waffleTypeActionPerformed
+    }//GEN-LAST:event_waffleTypeComboActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Code to clear orders
-        bw.clearOrders(); // empties contents of array list in BelgianWaffle class
-        prevOrderWindow.setText(""); // sets JTextArea to blank
+        mbw.clearOrders();
+        updateListBox();
+        
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void minusCoffeeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusCoffeeBtnActionPerformed
+        // TODO add your handling code here:
+        int tempCoffeeQuantity = Integer.parseInt(coffeeQuantityTxt.getText());
+        if(tempCoffeeQuantity!=0)
+            tempCoffeeQuantity--;
+        coffeeQuantityTxt.setText(Integer.toString(tempCoffeeQuantity));
+    }//GEN-LAST:event_minusCoffeeBtnActionPerformed
+
+    private void plusWaffleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plusWaffleBtnActionPerformed
+        // TODO add your handling code here:
+        int tempWaffleQuantity = Integer.parseInt(waffleQuantityTxt.getText());
+        tempWaffleQuantity++;
+        waffleQuantityTxt.setText(Integer.toString(tempWaffleQuantity));
+    }//GEN-LAST:event_plusWaffleBtnActionPerformed
+
+    private void minusWaffleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_minusWaffleBtnActionPerformed
+        // TODO add your handling code here:
+        int tempWaffleQuantity = Integer.parseInt(waffleQuantityTxt.getText());
+        if(tempWaffleQuantity!=0)
+            tempWaffleQuantity--;
+        waffleQuantityTxt.setText(Integer.toString(tempWaffleQuantity));
+    }//GEN-LAST:event_minusWaffleBtnActionPerformed
+
+    private void plusCoffeeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plusCoffeeBtnActionPerformed
+        // TODO add your handling code here:
+        int tempCoffeeQuantity = Integer.parseInt(coffeeQuantityTxt.getText());
+        tempCoffeeQuantity++;
+        coffeeQuantityTxt.setText(Integer.toString(tempCoffeeQuantity));
+    }//GEN-LAST:event_plusCoffeeBtnActionPerformed
+
+    private void totalTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalTxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totalTxtActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        int reply = JOptionPane.showConfirmDialog(null, "Are you sure to remove selected item?", "Void Prompt", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+          mbw.removeOrder(orderListbox.getSelectedIndex());
+          mbw.updateTotalPrice();
+          updateListBox();
+          totalTxt.setText(mbw.getTotalPrice()+".00");
+        }
+        
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        SalesReport frame = new SalesReport();
+        frame.setVisible(true);
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -366,25 +544,40 @@ public class OrderForm extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new OrderForm().setVisible(true);
+                
+
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField coffeeQuantity;
-    private javax.swing.JComboBox<String> coffeeType;
+    private javax.swing.JButton addOrderBtn;
+    private javax.swing.JTextField changeTxt;
+    private javax.swing.JTextField coffeeQuantityTxt;
+    private javax.swing.JComboBox<String> coffeeTypeCombo;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea prevOrderWindow;
-    private javax.swing.JTextField waffleQuantity;
-    private javax.swing.JComboBox<String> waffleType;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JToggleButton minusCoffeeBtn;
+    private javax.swing.JToggleButton minusWaffleBtn;
+    private javax.swing.JList<String> orderListbox;
+    private javax.swing.JToggleButton plusCoffeeBtn;
+    private javax.swing.JToggleButton plusWaffleBtn;
+    private javax.swing.JTextField totalTxt;
+    private javax.swing.JTextField waffleQuantityTxt;
+    private javax.swing.JComboBox<String> waffleTypeCombo;
     // End of variables declaration//GEN-END:variables
 }
