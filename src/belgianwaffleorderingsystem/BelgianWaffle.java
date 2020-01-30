@@ -34,7 +34,9 @@ class Order<E> extends ArrayList<E>{
         }
        
     }
-
+    public int getTotal(){
+        return mtotal;
+    }
    
    
     
@@ -50,9 +52,9 @@ public class BelgianWaffle extends Exception {
   
   private ArrayList<Order>mOrders;
   
-  private double mTransactionTotal;
-  private double mChange;
-  private double mTenderedCash;
+  private int mTransactionTotal;
+  private int mChange;
+  private int mTenderedCash;
   
   private BelgianDatabaseHandler mDb;
   
@@ -85,16 +87,28 @@ public class BelgianWaffle extends Exception {
                 throw new OrderException("Duplicate Order "+mCoffee.get(coffeeIndex));
             }
          }
-    
+         updateTotalPrice();
      
       
     
+  }
+  public void removeOrder(int index){
+      mOrders.remove(index);
+      
+  }
+  private void updateTotalPrice(){
+      mTransactionTotal = 0;
+      for(int i =0;i<mOrders.size();i++){
+          mTransactionTotal+=mOrders.get(i).getTotal();
+      }
   }
   public ArrayList<Order> getOrders(){
    
       return mOrders;
   }
-  
+  public int getTotalPrice(){
+      return mTransactionTotal;
+  }
   
   
   
